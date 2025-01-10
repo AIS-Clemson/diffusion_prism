@@ -2,6 +2,7 @@
 
 News: This paper is accepted by the WACV 2024 [4th Workshop on Image/Video/Audio Quality in Computer Vision and Generative AI](https://wacv2025-image-quality-workshop2.github.io/index.html)
 
+For more details, visit the [Project Page](https://arazi2.github.io/aisends.github.io/project/Prism).
 
 ## Introduction
 
