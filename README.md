@@ -1,6 +1,6 @@
 # Diffusion Prism: Enhancing Diversity and Morphology Consistency in Mask-to-Image Diffusion
 
-News: This paper is accepted by the [WACV 2024 4th Workshop on Image/Video/Audio Quality in Computer Vision and Generative AI](https://wacv2025-image-quality-workshop2.github.io/index.html)
+News: This paper is accepted by the WACV 2024 [4th Workshop on Image/Video/Audio Quality in Computer Vision and Generative AI](https://wacv2025-image-quality-workshop2.github.io/index.html)
 
 
 ## Introduction
