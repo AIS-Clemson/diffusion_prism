@@ -103,16 +103,9 @@ def load_model_from_config(config, ckpt, verbose=False):
 
 # path = opt.init_img
 def load_img(image_name, path, noise_std):
-    # style = Image.open('./train/style.png').convert("RGB")
     image = Image.open(path).convert("RGB")
-    # image = image.convert("RGB")
     
-    # mask_path = 'D:/Data/Flame 2/254p Dataset/254p Thermal Images/'
-    # mask_path = './wildfire_images/mask/'
-    # mask_file = random.choice(os.listdir(mask_path))
-    # mask = Image.open(mask_path+mask_file).convert("L")
-    # mask = Image.open(path).convert("L")
-    
+    # =============================================================
     # z = len(image.mode)
     # w, h = image.size
     # w, h = map(lambda x: x - x % 64, (w, h))  # resize to integer multiple of 32
@@ -129,10 +122,10 @@ def load_img(image_name, path, noise_std):
     #         w = int((w // 64 + 1) * 64)
     # print(f"loaded input image from {path}, resize to ({w}, {h}) ")
     # image = image.resize((w, h), resample=PIL.Image.LANCZOS)
+    # =============================================================
+    
     image = image.resize((512, 512), resample=PIL.Image.LANCZOS)
 
-
-    # style = np.array(style)
     image = np.array(image)
     mask_out = copy.deepcopy(image)
 
@@ -140,33 +133,7 @@ def load_img(image_name, path, noise_std):
     for i in range(3):
         image[:, :, i] = image[:, :, i] * random_factors[i]
     
-
-    # platte = [167, 94, 186]
-    # dist = [[40.59851281333147, 26.7118421940969], 
-    #         [55.277741212715306, 23.408962325350206],
-    #         [42.00675955748495, 28.416417146409522]]
-    
-    # platte = [44, 40, 39]
-    # dist = [[224.22712712712712, 44.28109809504908],
-    #         [224.600996996997, 43.694725732791305],
-    #         [224.92215415415416, 42.03096315751292]]
-    
-    # platte = [180, 102, 64]
-    # dist = [[112.66991, 78.6428141319466],
-    #         [68.105973, 49.88101810030817],
-    #         [38.239779, 28.10572950540795]]
-    
-    # platte = [51, 121, 189]
-    # dist = [[132.864006, 27.70263777390095],
-    #         [130.919851, 21.99702455192063],
-    #         [213.179786, 13.143243853562334]]
-    
-    # platte = [38, 228, 207]
-    # dist = [[6.549871871871872, 16.178191220119583],
-    #         [85.69292992992993, 48.305266587031056],
-    #         [36.32596996996997, 31.341505353012188]]
-    
-    
+    # =============================================================
     # platte = [204, 90, 59]
     # dist = [[112.66991, 78.6428141319466], 
     #         [68.105973, 49.88101810030817],
@@ -187,44 +154,27 @@ def load_img(image_name, path, noise_std):
     # mask = np.random.normal(0, noise_std, size=(w,h,3))
     # mask = (mask - np.min(mask))/(np.max(mask)-np.min(mask)) *255
     # mask = mask.astype(np.uint8)
+    # =============================================================
     
     noise = np.random.normal(0, noise_std, image.shape)
     noisy_image = image/255.0 + noise
 
     # noisy_image = image/255.0 + n/255.0
     noisy_image = img_uint8(noisy_image)
-    
-    # image = 0.5*np.array(mask) + 0.5*np.array(image)
-    # image[image>255] = 255
-    # image = image.astype(np.uint8)
-    # mask_out = copy.deepcopy(noisy_image)
-
-    
     image = noisy_image
     
     if random.random() > 0.5:
         image = 255-image
         
-    # if random.random() > 0.5:
-    # image = image*np.random.uniform(0, 1)
-        
-    # Generate random factors for each layer
     random_factors = np.random.uniform(0, 1, size=3)
-    # random_factors = [1, 0.5, 0.25]
-    
     for i in range(3):
         image[:, :, i] = image[:, :, i] * random_factors[i]
     
-    # image = copy.deepcopy(mask)
-    # mask_out = copy.deepcopy(image)
-
     # To tensor
     image = np.array(image).astype(np.float32) / 255.0
     image = image[None].transpose(0, 3, 1, 2)
     image = torch.from_numpy(image)
     
-    # mask =  cv2.cvtColor(mask.astype(np.uint8), cv2.COLOR_RGB2GRAY)
-
     return (2.*image - 1.), mask_out
 
 
@@ -273,18 +223,8 @@ from datetime import datetime
 
 if __name__ == "__main__":
 # main()
-
-# batch_generation = True
 # data_label = {"image:"}
 
-# if batch_generation:
-# noise_test = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
-# noise_test = [0.5, 0.6, 0.7, 0.8, 0.9, 1]
-
-# noise_test = [0.01, 0.02, 0.05]
-
-# for noise_std in noise_test:
-    
     parser = argparse.ArgumentParser()
     parser.add_argument( "--prompt", type=str, nargs="?", default="a painting of a virus monster playing guitar",help="the prompt to render")
     parser.add_argument( "--init-img", type=str, nargs="?", help="path to the input image", default="test2.jpg")
@@ -310,165 +250,70 @@ if __name__ == "__main__":
     opt = parser.parse_args()
     # seed_everything(opt.seed)
     
-    # sample_path = './test_img/samples/'
-    # sample_file_list = os.listdir(sample_path)
-    # sample_file = random.choice(sample_file_list)
     
-    # opt.init_img = sample_path+sample_file
-    # # opt.init_img = "./test_img/image_skeleton_dia.png"
-    # opt.prompt = "polygon, nano materials, dendrite, lab sample, chemistry, biology, encryption, code"
-    opt.prompt = " "
-    # opt.scale = 100
-    # opt.strength = 0.2
-    # opt.ddim_steps = 100
-    opt.n_samples = 1
-    opt.n_iter = 1
     # opt.ckpt = "models/ldm/stable-diffusion-v1/sd-v1-1.ckpt"
     opt.ckpt = "models/ldm/stable-diffusion-v1/v1-5-pruned.ckpt"
 
-    opt.skip_grid = True
-    opt.watermark = False
-    
-    num_sample = 20
-    # path = opt.init_img
-
     config = OmegaConf.load(f"{opt.config}")
     model = load_model_from_config(config, f"{opt.ckpt}")
-
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     model = model.to(device)
     
-    if opt.plms:
-        raise NotImplementedError("PLMS sampler not (yet) supported")
-        sampler = PLMSSampler(model)
-    else:
-        sampler = DDIMSampler(model)
 
-    opt.outdir = f'./train/exp/output/'
-    # opt.outdir = f'./train/exp/output/'
+    # =============================================================
+    opt.prompt = "a dendrite sample with rich background"
+    
+    # opt.scale = 30 #random.randint(5, 100)
+    # opt.strength = random.uniform(0.1, 0.3)
+    # noise_std = random.uniform(0, 0.05)
+    opt.n_samples = 1
+    opt.n_iter = 1
+
+    opt.skip_grid = True
+    opt.watermark = False
+    num_sample = 20
+
+    
+    img_file = "75.jpg"
+    image_name = img_file.split('.')[0]
+    image_path = './exp/'
+    opt.init_img = image_path+img_file
+    
+    test_folder = 'dendrite_test'
+    outpath = f'./exp/outputs/{test_folder}/'
     os.makedirs(opt.outdir, exist_ok=True)
-    outpath = opt.outdir
-
+    opt.outdir = outpath
     sample_path = opt.outdir + '/samples/'
-    # mask_path = opt.outdir + '/masks/'
-    # os.makedirs(sample_path, exist_ok=True)
-    # os.makedirs(mask_path, exist_ok=True)
+    # =============================================================
 
-
-    # batch_size = opt.n_samples
-    # n_rows = opt.n_rows if opt.n_rows > 0 else batch_size
-    # if not opt.from_file:
-    #     prompt = opt.prompt
-    #     assert prompt is not None
-    #     data = [batch_size * [prompt]]
-    
-    # else:
-    #     print(f"reading prompts from {opt.from_file}")
-    #     with open(opt.from_file, "r") as f:
-    #         data = f.read().splitlines()
-    #         data = list(chunk(data, batch_size))
-    
-    # sample_path = os.path.join(outpath, f"samples_noise_{noise_std}")
-    # os.makedirs(sample_path, exist_ok=True)
-    # base_count = len(os.listdir(sample_path))
-    # grid_count = len(os.listdir(outpath)) - 1
-    # sample_path = f'./train/latent_test/'
-    # sample_path = f'./train/color_test/'
-
-    img_path = './'
-    # img_path = './train/samples_mask/'
-    # img_path = 'D:/Data/Flame 2/254p Dataset/254p RGB Images/'
-    # img_path = './wildfire_images/mask/'
-
-    img_list = os.listdir(img_path)
-
-        
     image_info = []
-
-    
     precision_scope = autocast if opt.precision == "autocast" else nullcontext
     with torch.no_grad():
         with precision_scope("cuda"):
             with model.ema_scope():
                 # tic = time.time()
                 all_samples = list()
-                
                 i = 0
-
                 while i < num_sample:
                     try:
-                        tic = time.time()
                         i += 1
-                        # img_file = '172.jpg'
-                        # img_file = '36.jpg'
-                        # img_file = "./train/21_manual1.gif"
-                        # img_file = "./train/finger.png"
-                        # img_file = "./train/exp/sample/Group_3_DHSample_10_Branch_11.png"
-                        # img_file = "./train/exp/sample/9916.png"
-                        # img_file = "./train/exp/sample/8947.png"
-                        # img_file = "./train/exp/sample/5270.png"
-                        # img_file = "./train/exp/sample/4842.png"
-                        img_file = "./train/exp/sample/Deconvolution Result Projected(8bit).tif"
+                        tic = time.time()
 
-                        
-
-                        # img_file = random.choice(img_list)
-                        # img_file = img_list[i]
-                        image_name = img_file.split('.')[0]
-                        # sample_path = f'./train/latent_test/{image_name}/'
-
-                        opt.init_img = img_path+img_file
-                        # opt.init_img = "./test_img/image_skeleton_dia.png"
-                        # prompt_1 = "retina, vessel"
-                        # prompt_2 = "texture"
-                        # prompt_3 = "polygon"
-                        # prompt_4 = "nano materials"
-                        # prompt_5 = "dendrite"
-                        # prompt_6 = "chemistry"
-                        # prompt_7 = "lab sample"
-
-                        # opt.prompt = "random, blood, retina, vessel, realistic, colorful, high resolution, texture, polygon, nano materials, dendrite, chemistry, lab sample"
-
-                        # prompt_list = [prompt_1,prompt_2,prompt_3,prompt_4,prompt_5,prompt_6,prompt_7]
-                        # opt.prompt = random.choice(prompt_list)
-                        # opt.prompt = "random, blood, retina, vessel, realistic, colorful, high resolution, texture, polygon, nano materials, dendrite, chemistry, lab sample"
-                        # opt.prompt = "retina vessel"
-                        # opt.prompt = "photo realistic, wildfire in the forest, flame and fire in the smoke, desert, high resolution"
-                        # opt.prompt = 'fire on airplane'
-                        # opt.prompt = "photo realistic, wildfire in the forest, flame and fire in the smoke and snow, high resolution"
-                        # opt.prompt = "photo realistic, cars and people in the city, city view, traffic lights, high resolution"
-                        opt.prompt = "a realistic neuron sample in a rich background, microscope phtography, lens blur, lens flare, chroma aberration"
-                        
-                        
-                        # opt.prompt = "a transparent dendrite sample with rich background, realistic"
-                        # opt.prompt = "a dendrite sample"
-                        # opt.prompt = "retina fundus neural"
-                        # opt.prompt = "a realistic neural photo"
-
-                        # opt.prompt = "a broken fingerprint with ink on a white paper"
-
-                        # opt.prompt = "a realistic fingerprint photo"
-                        # opt.prompt = "a realistic thumb photo taken by micro lens in a lab"
-                        # opt.prompt = "a fingerprint photo taken by micro lens from bottom of a transparent lab glass"
-                        opt.prompt = "a realistic neuron cell"
-
-
-                        # for strength in [0.1,0.2,0.5,0.7,0.9]:
-                    
-                        opt.scale = 30 #random.randint(5, 100)
+                        # =============================================================
+                        opt.scale = 30 #random.randint(5, 30)
                         opt.strength = random.uniform(0.1, 0.3)
-                        # opt.scale = int(10/opt.strength)
                         noise_std = random.uniform(0, 0.05)
-
-
                         opt.ddim_steps = int(10/opt.strength)
+                        # =============================================================
+
                         if opt.ddim_steps>=100: opt.ddim_steps=100
                         
-                        # if opt.plms:
-                        #     raise NotImplementedError("PLMS sampler not (yet) supported")
-                        #     sampler = PLMSSampler(model)
-                        # else:
-                        #     sampler = DDIMSampler(model)
+                        if opt.plms:
+                            raise NotImplementedError("PLMS sampler not (yet) supported")
+                            sampler = PLMSSampler(model)
+                        else:
+                            sampler = DDIMSampler(model)
+                
                 
                         batch_size = opt.n_samples
                         n_rows = opt.n_rows if opt.n_rows > 0 else batch_size
@@ -500,21 +345,7 @@ if __name__ == "__main__":
                         variance = torch.var(init_latent).cpu().numpy()
                         std_dev = torch.std(init_latent).cpu().numpy()
                             
-                        # z_noise = np.random.normal(0, 1, init_latent.shape)
-                        # z_noise = torch.from_numpy(z_noise).to(device)
-                        # init_latent += z_noise
                         
-                        ###################
-                        # init_image_show = tensor2img(init_image)
-                        # cv2.imwrite(os.path.join(sample_path, f"{image_name}_{base_count:04}_init_image.png"), init_image_show)
-                            
-                        # init_latent_image = latent2img(init_latent)
-                        # cv2.imwrite(os.path.join(sample_path, f"{image_name}_{base_count:04}_init_latent_image.png"), init_latent_image)
-
-    
-    
-    
-    
                         assert 0. <= opt.strength <= 1., 'can only work with strength in [0.0, 1.0]'
                         t_enc = int(opt.strength * opt.ddim_steps)
                         print(f"target t_enc is {t_enc} steps")
@@ -547,7 +378,7 @@ if __name__ == "__main__":
                                 x_samples = model.decode_first_stage(samples)
                                 x_samples = torch.clamp((x_samples + 1.0) / 2.0, min=0.0, max=1.0)
                                 
-                                ###################
+                                # =============================================================
                                 # samples_show = latent2img(samples)
                                 # cv2.imwrite(os.path.join(sample_path, f"{image_name}_{base_count:04}_latent_final.png"), samples_show)
                                     
@@ -561,9 +392,8 @@ if __name__ == "__main__":
                                     
                                 #     x_samples_show = tensor2img(samples_k)
                                 #     cv2.imwrite(os.path.join(sample_path, f"{image_name}_{base_count:04}_image_{k}.png"), x_samples_show)
-                                        
+                                # =============================================================        
           
-                                # cache = get_local.cache # ->  {'your_attention_function': [attention_map]}
         
                                 if not opt.skip_save:
                                     for x_sample in x_samples:
@@ -583,7 +413,7 @@ if __name__ == "__main__":
                                             image = print_text_on_image(image, f"{opt.prompt}", "arial.ttf", font_size, (10, 30), (255, 255, 255))
                                             image = print_text_on_image(image, f"{img_file}", "arial.ttf", font_size, (10, 50), (255, 255, 255))
                                             
-                                        image_save_name = f"{image_name}_{base_count:04}.png"
+                                        image_save_name = f"{image_name}_{base_count:04}.jpg"
                                         image.save(os.path.join(sample_path, image_save_name))
                                         mask_save_name = f"{image_name}_{base_count:04}_mask.jpg"
                                         cv2.imwrite(os.path.join(sample_path, mask_save_name), mask)
@@ -622,75 +452,14 @@ if __name__ == "__main__":
                                 
                     except:
                         print('skip...')
-                        
-                    
-        
+                                
             print(f"Your samples are ready and waiting for you here: \n{outpath} \n"
                   f" \nEnjoy.")
 
             image_info = np.array(image_info, dtype=object)
-            # np.save(f'./train/dataset_{date_time_string}.npy', image_info)
+            np.save(f'./{outpath}/dataset.npy', image_info)
 
 
-
-# def norm_image(image):
-#     """
-#     Normalization image
-#     :param image: [H,W,C]
-#     :return:
-#     """
-#     image = image.copy()
-#     image -= np.max(np.min(image), 0)
-#     image /= np.max(image)
-#     image *= 255.
-#     return np.uint8(image)
-
-        
-
-
-# print(opt.prompt)                
-
-# # attention_maps = cache['UNetModel.forward']
-# attention_maps = cache['CrossAttention.forward']
-# # attention_maps = cache['BasicTransformerBlock._forward']
-
-
-# len(attention_maps)
-# attention_maps[-1].shape
-# channel = len(attention_maps[-1])
-
-
-# # attention_maps = norm_image(attention_maps[-1])
-# attention_maps = attention_maps[-1]
-
-
-# # Assuming `attention_map` has shape 16x4096x77 and `token_index` is the index of "wildfire"
-# attention_to_wildfire = attention_maps[:, :, 76]  # Extracting the vectors related to "wildfire", shape 16x4096
-# # attention_to_wildfire = attention_maps.sum(axis=2)  # Extracting the vectors related to "wildfire", shape 16x4096
-
-
-# # Reshape to get 64x64 grid for each head
-# attention_to_wildfire_reshaped = attention_to_wildfire.reshape(16, 64, 64)  # shape becomes 16x64x64
-
-# # Average across heads (optional)
-# average_attention_to_wildfire = attention_to_wildfire_reshaped.mean(axis=0)  # shape becomes 64x64
-
-# average_attention_to_wildfire = norm_image(average_attention_to_wildfire)
-# average_attention_to_wildfire = cv2.resize(average_attention_to_wildfire, (512,512))
-
-# # Now, `average_attention_to_wildfire` is your final 64x64 attention map that can be visualized.
-# plt.figure(dpi=100)
-# plt.imshow(image)
-# plt.imshow(average_attention_to_wildfire, alpha=0.5, interpolation='nearest', cmap='jet')
-
-
-
-        
-        
-        
-        
-        
-    
     
     
     
