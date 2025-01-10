@@ -20,7 +20,7 @@ We will update more details later according to the request. Please contact us an
 
 ## Sample Dataset
 
-<img src="./Figure/teaser_2.jpg" width=100%>
+<img src="./Figure/teaser_2.jpg" width=60%>
 
 - **Dataset:** Download from [Google Drive]()
 
@@ -34,7 +34,7 @@ We will update more details later according to the request. Please contact us an
 
 ## Methodology
 
-<img src="./Figure/latent_4" width=90%>
+<img src="./Figure/latent_4.jpg" width=90%>
 
 **Diffusion Process:**
    - Combines masks with controllable noise, processed through a Variational Autoencoder (VAE) to generate latent variables.
