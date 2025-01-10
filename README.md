@@ -20,7 +20,7 @@ We will update more details later according to the request. Please contact us an
 
 ## Sample Dataset
 
-<img src="./Figure/teaser_2.jpg" width=60%>
+<img src="./Figure/teaser_2.jpg" width=70%>
 
 - **Dataset:** Download from [Google Drive]()
 
@@ -34,7 +34,7 @@ We will update more details later according to the request. Please contact us an
 
 ## Methodology
 
-<img src="./Figure/latent_4.jpg" width=90%>
+<img src="./Figure/latent_4.jpg" width=100%>
 
 **Diffusion Process:**
    - Combines masks with controllable noise, processed through a Variational Autoencoder (VAE) to generate latent variables.
@@ -43,12 +43,12 @@ We will update more details later according to the request. Please contact us an
 
 ## Experimental Results
 
-<img src="./Figure/grid_3.jpg" width=90%>
+<img src="./Figure/grid_3.jpg" width=100%>
 
 - **High-Quality:** Lowest FID score compared to other methods, indicating better realistic styles.
 - **Consistency:** Morphology preserving, the skeleton shape is well-kept in synthesized images.
 
-<img src="./Figure/abl.jpg" width=70%>
+<img src="./Figure/abl.png" width=70%>
 
 For more details, visit the [Project Page](https://arazi2.github.io/aisends.github.io/project/Prism).
 
